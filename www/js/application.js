@@ -1,4 +1,4 @@
-angular.module('c4u', ['ionic', 'c4u.routes', 'c4u.controllers.chats', 'c4u.controllers.dashboard', 'c4u.controllers.account', 'c4u.services.chats', 'c4u.services.sessions']).run(["$ionicPlatform", function($ionicPlatform) {
+angular.module('c4u', ['ionic', 'c4u.routes', 'c4u.controllers.chats', 'c4u.controllers.dashboard', 'c4u.controllers.account', 'c4u.controllers.places', 'c4u.services.chats', 'c4u.services.sessions', 'c4u.services.places']).run(["$ionicPlatform", function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -45,6 +45,22 @@ angular.module('c4u.routes', []).config(["$stateProvider", "$urlRouterProvider",
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
         controller: 'AccountCtrl'
+      }
+    }
+  }).state('tab.places', {
+    url: '/places',
+    views: {
+      'tab-places': {
+        templateUrl: 'templates/places/tab-places.html',
+        controller: 'PlacesCtrl'
+      }
+    }
+  }).state('tab.places-detail', {
+    url: '/places/:placeId',
+    views: {
+      'tab-places': {
+        templateUrl: 'templates/places/detail.html',
+        controller: 'PlaceDetailCtrl'
       }
     }
   });
@@ -96,6 +112,23 @@ angular.module('c4u.routes', []).config(["$stateProvider", "$urlRouterProvider",
   };
   DashboardController.$inject = ["$sce"];
   return angular.module('c4u.controllers.dashboard', []).controller('DashCtrl', DashboardController);
+})();
+
+(function() {
+  var PlaceDetailController, PlacesController;
+  PlacesController = function($scope, placesService) {
+    var init;
+    init = function() {
+      return $scope.places = placesService.all();
+    };
+    init();
+  };
+  PlaceDetailController = function($scope, $stateParams, placesService) {
+    $scope.place = placesService.get($stateParams.placeId);
+  };
+  PlacesController.$inject = ['$scope', 'placesService'];
+  PlaceDetailController.$inject = ['$scope', '$stateParams', 'placesService'];
+  return angular.module('c4u.controllers.places', []).controller('PlacesCtrl', PlacesController).controller('PlaceDetailCtrl', PlaceDetailController);
 })();
 
 (function() {
@@ -151,6 +184,60 @@ angular.module('c4u.routes', []).config(["$stateProvider", "$urlRouterProvider",
     };
   };
   return angular.module('c4u.services.chats', []).factory('chatService', ChatsService);
+})();
+
+(function() {
+  var PlacesService;
+  PlacesService = function() {
+    var places;
+    places = [
+      {
+        id: 1,
+        name: "KBoom!",
+        address: "Calle falsa 123",
+        phone: "12345678",
+        score: "5"
+      }, {
+        id: 2,
+        name: "Fake",
+        address: "Calle falsa 123",
+        phone: "-",
+        score: "3"
+      }, {
+        id: 3,
+        name: "Oh la la",
+        address: "Calle falsa 123",
+        phone: "12345678",
+        score: "2"
+      }, {
+        id: 4,
+        name: "Bleh",
+        address: "Calle falsa 123",
+        phone: "12345678",
+        score: "1.5"
+      }
+    ];
+    return {
+      all: function() {
+        return places;
+      },
+      remove: function(place) {
+        places.splice(places.indexOf(chat), 1);
+      },
+      get: function(placeId) {
+        var i;
+        i = 0;
+        while (i < places.length) {
+          if (places[i].id === parseInt(placeId)) {
+            return places[i];
+          }
+          i++;
+        }
+        return null;
+      }
+    };
+  };
+  return angular.module('c4u.services.places', []).factory('placesService', PlacesService);
 })();
 
 (function() {

@@ -7,9 +7,11 @@ angular
     'c4u.controllers.chats'
     'c4u.controllers.dashboard'
     'c4u.controllers.account'
+    'c4u.controllers.places'
 
     'c4u.services.chats'
     'c4u.services.sessions'
+    'c4u.services.places'
   ])
   .run ($ionicPlatform) ->
     $ionicPlatform.ready ->

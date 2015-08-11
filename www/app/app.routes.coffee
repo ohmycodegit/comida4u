@@ -31,5 +31,17 @@ angular
           templateUrl: 'templates/tab-account.html'
           controller: 'AccountCtrl'
 
+      .state 'tab.places',
+        url: '/places'
+        views: 'tab-places':
+          templateUrl: 'templates/places/tab-places.html'
+          controller: 'PlacesCtrl'
+
+      .state 'tab.places-detail',
+        url: '/places/:placeId'
+        views: 'tab-places':
+          templateUrl: 'templates/places/detail.html'
+          controller: 'PlaceDetailCtrl'
+
     $urlRouterProvider.otherwise '/tab/dash'
     return
